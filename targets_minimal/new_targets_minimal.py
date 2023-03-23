@@ -59,7 +59,7 @@ class TargetsMinimal(object):
         Returns:
             None
         """
-        log.info('Initialising the minimal target selector')
+        log.info('Initialising the minimal target selector, session commits true.')
         redis_host, redis_port = redis_endpoint.split(':')
         self.redis_server = redis.StrictRedis(host=redis_host, 
                                               port=redis_port, 
@@ -90,10 +90,10 @@ class TargetsMinimal(object):
         cfg = self.read_config_file(config_file)
         url = URL(**cfg)
         self.engine = create_engine(url)
-        self.connection = self.engine.connect()
+#        self.connection = self.engine.connect()
         
-        #Session = sessionmaker(bind=engine)
-        #self.session = Session()
+       # Session = sessionmaker(bind=self.engine)
+       # self.session = Session()
 
     def read_config_file(self, config_file):
         """Read the database configuration yaml file.
@@ -276,7 +276,8 @@ class TargetsMinimal(object):
         #end_ts = time.time()
         #log.info('Debug retrieval {} of view in {} seconds'.format(target_debug.shape[0], int(end_ts - start_ts)))
         start_ts = time.time()
-        target_list = pd.read_sql(targets_query, con=self.connection)
+        with self.engine.begin() as connection:
+            target_list = pd.read_sql(targets_query, con=connection)
        # self.session.commit()
         #print(targets_query)
         end_ts = time.time()

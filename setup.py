@@ -11,7 +11,7 @@ requires = [
 
 setuptools.setup(
     name = 'targets_minimal',
-    version = '1.0',
+    version = '1.0.1',
     url = 'https://github.com/danielczech/targets-minimal',
     license = 'MIT',
     author = 'Daniel Czech',
